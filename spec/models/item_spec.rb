@@ -60,6 +60,26 @@ RSpec.describe Item, type: :model do
         @item.valid?
         expect(@item.errors.full_messages).to include('Price is not included in the list')
       end
+      it '価格が半角英語だけでは出品登録できない' do
+        @item.price = 'abcd'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is not included in the list')
+      end
+      it '価格が半角英数金剛では出品登録できない' do
+        @item.price = '1a2b3c'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is not included in the list')
+      end
+      it '価格が299円以下では出品登録できない' do
+        @item.price = 299
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is not included in the list')
+      end
+      it '価格が10,000,000以上ではば登録できない' do
+        @item.price = 10000000
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is not included in the list')
+      end
       it '商品画像が空では登録できない' do
         @item.image = nil
         @item.valid?
