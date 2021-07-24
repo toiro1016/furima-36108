@@ -11,7 +11,7 @@ RSpec.describe Item, type: :model do
       発送までの日数、価格、商品画像が存在すれば登録できる' do
         expect(@item).to be_valid
       end
-    end 
+    end
 
     context '商品出品ができない時' do
       it '商品名が空では登録できない' do
@@ -76,7 +76,7 @@ RSpec.describe Item, type: :model do
         expect(@item.errors.full_messages).to include('Price is not included in the list')
       end
       it '価格が10,000,000以上ではば登録できない' do
-        @item.price = 10000000
+        @item.price = 10_000_000
         @item.valid?
         expect(@item.errors.full_messages).to include('Price is not included in the list')
       end
@@ -88,7 +88,7 @@ RSpec.describe Item, type: :model do
       it '商品に紐づくユーザーが存在しない場合登録できない' do
         @item.user = nil
         @item.valid?
-        expect(@item.errors.full_messages).to include("User must exist")
+        expect(@item.errors.full_messages).to include('User must exist')
       end
     end
   end
