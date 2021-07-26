@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit]
   def index
-    @items = Item.all.order(id: "DESC")
+    @items = Item.all.order(id: 'DESC')
   end
 
   def new
@@ -32,9 +32,8 @@ class ItemsController < ApplicationController
     else
       render :edit
     end
-
   end
-  
+
   private
 
   def item_params
