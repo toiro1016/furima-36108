@@ -1,24 +1,16 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!, only: [:index, :create]
   before_action :set_item_id, only: [:index, :create]
-  before_action :sold_out, only: [:index]
+  before_action :sold_out, only: [:index, :create]
 
   def index
     @purchase = PurchaseInfomation.new
-    redirect_to root_path if current_user == @item.user
   end
 
   def create
     @purchase = PurchaseInfomation.new(purchase_params)
-    if @purchase.valid?
-      Payjp.api_key = ENV['PAYJP_SECRET_KEY']
-      Payjp::Charge.create(
-        amount: @item[:price],
-        card: purchase_params[:token],
-        currency: 'jpy'
-      )
-      @purchase.save
-      redirect_to root_path
+    if @purchase.valid?(card)
+
     else
       render :index
     end
@@ -37,6 +29,19 @@ class OrdersController < ApplicationController
   end
 
   def sold_out
-    redirect_to root_path if @item.order.present?
+    redirect_to root_path if @item.order.present? || current_user == @item.user
   end
+end
+
+private
+
+def card
+  Payjp.api_key = ENV['PAYJP_SECRET_KEY']
+  Payjp::Charge.create(
+    amount: @item[:price],
+    card: purchase_params[:token],
+    currency: 'jpy'
+  )
+  @purchase.save
+  redirect_to root_path
 end

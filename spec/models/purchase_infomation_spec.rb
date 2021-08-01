@@ -59,7 +59,7 @@ RSpec.describe PurchaseInfomation, type: :model do
         end
 
         it 'shipping_addressがない場合は購入ができない' do
-          @purchase.shipping_address_id = ''
+          @purchase.shipping_address_id = 1
           @purchase.valid?
           expect(@purchase.errors.full_messages).to include("Shipping address can't be blank")
         end
