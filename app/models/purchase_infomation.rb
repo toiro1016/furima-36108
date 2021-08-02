@@ -19,6 +19,6 @@ class PurchaseInfomation
   def save
     order = Order.create(user_id: user_id, item_id: item_id)
     shipping = Shipping.create(postal_code: postal_code, shipping_address_id: shipping_address_id, municipality: municipality,
-                               address: address, building_name: building_name, phone_number: phone_number, order: order)
+                               address: address, building_name: building_name, phone_number: phone_number, order_id: order.id)
   end
 end
