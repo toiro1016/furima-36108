@@ -9,8 +9,10 @@ class OrdersController < ApplicationController
 
   def create
     @purchase = PurchaseInfomation.new(purchase_params)
-    if @purchase.valid?(card)
-
+    if @purchase.valid?
+      card
+      @purchase.save
+      redirect_to root_path
     else
       render :index
     end
@@ -31,17 +33,13 @@ class OrdersController < ApplicationController
   def sold_out
     redirect_to root_path if @item.order.present? || current_user == @item.user
   end
-end
 
-private
-
-def card
-  Payjp.api_key = ENV['PAYJP_SECRET_KEY']
-  Payjp::Charge.create(
-    amount: @item[:price],
-    card: purchase_params[:token],
-    currency: 'jpy'
-  )
-  @purchase.save
-  redirect_to root_path
+  def card
+    Payjp.api_key = ENV['PAYJP_SECRET_KEY']
+    Payjp::Charge.create(
+      amount: @item[:price],
+      card: purchase_params[:token],
+      currency: 'jpy'
+    )
+  end
 end
