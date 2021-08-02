@@ -18,7 +18,7 @@ RSpec.describe PurchaseInfomation, type: :model do
 
       it 'building_nameがなくても購入ができる' do
         @purchase.building_name = ''
-        @purchase.valid?
+        expect(@purchase).to be_valid
       end
 
       context '商品の購入ができない' do
@@ -95,6 +95,18 @@ RSpec.describe PurchaseInfomation, type: :model do
 
         it 'phone_numberが全角の場合は購入ができない' do
           @purchase.phone_number = '０８０１２３４５６７８'
+          @purchase.valid?
+          expect(@purchase.errors.full_messages).to include('Phone number is invalid')
+        end
+
+        it 'phone_numberが数字のみ（半角英数混合）でないと購入ができない' do
+          @purchase.phone_number = '1a2b3c4d5oo'
+          @purchase.valid?
+          expect(@purchase.errors.full_messages).to include('Phone number is invalid')
+        end
+
+        it 'phone_numberが数字のみ（ハイフンあり）でないと購入ができない' do
+          @purchase.phone_number = '12345-67890'
           @purchase.valid?
           expect(@purchase.errors.full_messages).to include('Phone number is invalid')
         end
